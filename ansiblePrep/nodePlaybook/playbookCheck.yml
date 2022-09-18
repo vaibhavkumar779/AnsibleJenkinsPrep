@@ -14,8 +14,27 @@
           - nodejs
           - npm
 
+- name: Create new Linux user # to improve security
+  hosts: node2 
+  tasks:
+    - name: Install acl #provides *setfact* so that proper permissions can be applied for user change unprivileged
+      apt:
+        state: latest
+        update_cache: true
+        pkg:
+          - acl
+    - name: Creating User
+      user:
+        name: vk
+        comment: vk Admin
+        group: admin
+        createhome: yes
+
 - name: Deploy nodejs app
   hosts: node2 
+  # become: true
+  # become_method: su
+  # become_user: vk
   tasks:
     - name: Copy nodejs folder to a server
       copy:
@@ -27,3 +46,27 @@
         src: /home/ubuntu/app-1.0.0.tgz
         dest: /home/ubuntu
         remote_src: yes #to look on remote not on control node
+
+    # - name: Unpack directly from local to remote
+    #   unarchive:
+    #     src: ./node-hello-1.0.0.tgz
+    #     dest: /home/ubuntu
+
+    - name: Install dependencies based on package.json
+      npm:
+        path: /home/ubuntu/package
+    
+    - name: Start application
+      command:
+        chdir: /home/ubuntu/package
+        cmd: npm start
+      async: 100 # run this for 100 seconds
+      poll: 0 # start this task and move to next task
+
+    - name: Ensure app is running
+      shell: ps aux | grep npm   #similar to command but it actually uses shell command is more secure
+      register: app_status
+
+    - debug:
+        var: app_status.stdout_lines
+
