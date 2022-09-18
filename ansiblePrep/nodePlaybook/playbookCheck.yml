@@ -1,0 +1,29 @@
+---
+- name: Installing Node and npm on Ubuntu Server
+  hosts: node2
+  tasks:
+    - name: update cache
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        cache_valid_time: 3600
+
+    - name: message
+      apt:
+        pkg:
+          - nodejs
+          - npm
+
+- name: Deploy nodejs app
+  hosts: node2 
+  tasks:
+    - name: Copy nodejs folder to a server
+      copy:
+        src: ./node-hello-1.0.0.tgz
+        dest: /home/ubuntu/app-1.0.0.tgz
+
+    - name: Unpack nodejs file
+      unarchive:
+        src: /home/ubuntu/app-1.0.0.tgz
+        dest: /home/ubuntu
+        remote_src: yes #to look on remote not on control node
