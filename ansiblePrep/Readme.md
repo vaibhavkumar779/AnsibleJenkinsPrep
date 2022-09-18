@@ -107,3 +107,12 @@
    inflating: html/js/popper.min.js   
    inflating: html/js/slider-setting.js  
    ```
+
+# dynamic inventory aws
+
+* install following
+  * boto3
+  * botocore
+* enable plugins NOTE: plugins are prefered over scripts written in yaml while scripts in python
+  * aws_ec2
+* end inventory file as "*aws_ec2.yaml"

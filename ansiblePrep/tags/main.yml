@@ -1,0 +1,15 @@
+- hosts: localhost
+
+  tasks:
+    - debug: msg="sub and top"
+      tags: sub,top
+
+    - debug: msg="sub"
+      tags: sub
+
+    - debug: msg="blank"
+
+    #try
+    #ansible-playbook --tags top ./main.yml
+    #ansible-playbook --tags sub ./main.yml
+    #ansible-playbook --tags sub --skip-tags top ./main.yml

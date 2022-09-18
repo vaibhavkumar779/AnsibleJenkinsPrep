@@ -27,8 +27,10 @@
       user:
         name: vk
         comment: vk Admin
-        group: admin
+        group: admin 
         createhome: yes
+      register: user_creation_result
+    - debug: msg={{user_creation_result}}
 
 - name: Deploy nodejs app
   hosts: node2 
