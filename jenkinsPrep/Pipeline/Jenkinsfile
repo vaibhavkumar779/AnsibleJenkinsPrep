@@ -11,6 +11,13 @@ pipeline {
         booleanParam(name: 'executeTests', defaultValue: true, description:'')
     }
     stages {
+        stage("init") {
+            steps {
+                script {
+                    gv = load "script.groovy"
+                }
+            }
+        }
         stage("build"){
             when {
                 expression {
@@ -34,18 +41,32 @@ pipeline {
             }
         }
 
-         stage("deploy"){
+        stage("deploy"){
+            input {
+                message "Select env to deploy"
+                ok "Done"
+                parameters{
+                    choice(name: 'ENV_one', choices:['dev','staging','prod'],description:'')
+                    choice(name: 'ENV_two', choices:['dev','staging','prod'],description:'')
+                }
+            }
             steps{
-                echo "deploying app with ${parms.Version}"
-                echo "deploying with ${CRED}"
-                sh "${CRED}"
+                script {
+                    // inside script input
+                    // env.ENV = input message: "select env",message "Select the environment to deploy",ok "Done",parameters {choice(name: 'ENV_one', choices:['dev','staging','prod'],description:''}
+                    gv.deploy()
+                    echo "deplying for environments ${ENV_one} and ${ENV_two}"
+                }
+                
+            }
+        }
                 // or directly apply here
                 // withCredentials([
-                //     usernamePassword(credentials: 'server-cred-id', usernameVar: USER, userPasswordVar: PWD)
+                //     usernamePassword(credentials: 'server-cred-id', usernameVariable: 'USER', passwordVariable: 'PWD')
                 // ]){
-                //     sh "some script ${USER} ${PWD}"
+                //     echo "some script ${USER} ${PWD}"
                 // }
-            }
+
     }
 }
 
