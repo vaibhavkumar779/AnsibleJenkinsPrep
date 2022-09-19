@@ -1,0 +1,6 @@
+1. new item --> select Freestyle --> Add  build step : Execute Shell { npm --version } --> Add build step --> Invoke top-level maven
+--> Maven version: maven-3.6 --> Goals: --version
+
+Note: npm is installed local on sytem and maven is installed as plugin so different
+
+2. Adding repository (eg. https://github.com/jenkins-docs/simple-java-maven-app.git)--> provide credentials --> build
